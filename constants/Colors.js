@@ -7,5 +7,8 @@ export default {
   strongColor:'#333',
   defaultColor:'#666',
   defaultTitle:'#444',
-  oldPriceColor:'#999'
+  oldPriceColor:'#999',
+  listEmpty:'#f0f2f5',
+  listEmptyText:'#848689',
+
 };
