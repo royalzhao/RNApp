@@ -1,7 +1,10 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, AppRegistry  } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+// import Navs from './navigation/routerConfig'
+
+// AppRegistry.registerComponent('ReactNavigationNavs', () => Navs);
 
 export default class App extends React.Component {
   state = {
@@ -60,3 +63,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+
+
+// import React from 'react';
+// import {AppRegistry} from 'react-native';
+// import {StackNavigator} from 'react-navigation';
+// import {TabNav} from "./navigation/MainTabNavigator";
+// import ShopSettingScreen from "./page/shopSetting";
+
+
+// const App = StackNavigator({
+//         // Web: {screen: WebScreen},
+//         ShopSetting: {screen: ShopSettingScreen},
+        
+//         Main: {
+//             screen: TabNav,
+//             navigationOptions: ({navigation}) => ({
+//                 header: null
+//             })
+//         }
+//     },
+//     {
+//         initialRouteName: 'Main',
+//         headerMode: 'screen'
+//     });
+
+// AppRegistry.registerComponent('App', () => App);

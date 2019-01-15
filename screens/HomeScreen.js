@@ -9,23 +9,24 @@ import {
   View,
 } from 'react-native';
 import Colors from '../constants/Colors';
-import Introduction from '../components/introduction';
 import WareList from '../components/ware/wareList';
-
 import { MonoText } from '../components/StyledText';
-
 import ShopSetting from '../page/shopSetting'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title:"京东品客",
-    headerStyle:{
-      backgroundColor:Colors.tintColor,
+    tabBarLabel: '首页',
+    header: null,
+    tabBarIcon: ({focused}) => {
+        if (focused) {
+            return (
+                <Image style={styles.tabBarIcon} source={require('../assets/images/index_selected.png')}/>
+            );
+        }
+        return (
+            <Image style={styles.tabBarIcon} source={require('../assets/images/index.png')}/>
+        );
     },
-    headerTintColor: '#ffffff',
-    headerTintStyle:{
-      fontWeight:'bold'
-    }
   };
 
   render() {
@@ -44,5 +45,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  
+  tabBarIcon: {
+      width: 23,
+      height: 23,
+  }
 });

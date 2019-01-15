@@ -4,8 +4,11 @@ import {
     StyleSheet,
     Text,
     View,
-    FlatList
+    FlatList,
+    Button
   } from 'react-native';
+
+// import { StackNavigator } from 'react-navigation';
 
 import Colors from '../../constants/Colors';
 import WareItem from './wareItem';
@@ -15,10 +18,14 @@ import request from '../../common/request'
 import config from '../../common/config'
 import Introduction from '../introduction';
 
+// 路由配置
+import routerConfig from '../../navigation/routerConfig'
+// import stackNavigatorConfig from '../../navigation/stackNavigatorConfig'
 
-// const Index_icon1 = require('../assets/images/index_icon1.png');
-// const Index_icon2 = require('../assets/images/index_icon2.png');
-// const Index_icon3 = require('../assets/images/index_icon3.png');
+// const { navigate }  = this.props.navigation;
+// const simpleApp = StackNavigator(routerConfig,stackNavigatorConfig)
+
+import NavigationService from "../../navigation/NavigationService";
 
 export default class introduction extends React.Component {
     constructor(props){
@@ -97,7 +104,11 @@ export default class introduction extends React.Component {
                     <Image style={{width:25,height:25,borderRadius:15}} source={{uri:'https://wx.qlogo.cn/mmopen/vi_32/852SR3EjIKxI3icqLBHnGibVvroXMialrF2JczZWs6c5PwicPAFEzjibE5OmVjvCYbvSibh6A6A4Es0588Yk02kXC3AQ/132'}}></Image>
                     <Text style={styles.shopName}>赵帅的京挑店铺</Text>
                     </View>
-                    <Text style={styles.shopNameSetting}>设置店铺</Text>
+                    {/* <Text style={styles.shopNameSetting}>设置店铺</Text> */}
+                    <Button
+                        title="设置店铺"
+                        onPress={() => NavigationService.navigate('ShopSetting')}
+                    />
                 </View>
             </View>
         )

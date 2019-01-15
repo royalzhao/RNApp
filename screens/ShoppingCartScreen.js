@@ -1,18 +1,23 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+
+import { ScrollView, StyleSheet,Image } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import Colors from '../constants/Colors';
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
-    title:"购物车",
-    headerStyle:{
-      backgroundColor:Colors.tintColor,
+    tabBarLabel: '购物车',
+    header: null,
+    tabBarIcon: ({focused}) => {
+        if (focused) {
+            return (
+                <Image style={styles.tabBarIcon} source={require('../assets/images/shopping_selected.png')}/>
+            );
+        }
+        return (
+            <Image style={styles.tabBarIcon} source={require('../assets/images/shopping.png')}/>
+        );
     },
-    headerTintColor: '#ffffff',
-    headerTintStyle:{
-      fontWeight:'bold'
-    }
   };
 
   render() {
@@ -32,4 +37,8 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     backgroundColor: '#fff',
   },
+  tabBarIcon: {
+    width: 23,
+    height: 23,
+  }
 });
