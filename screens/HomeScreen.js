@@ -7,16 +7,16 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button,
+  Alert
 } from 'react-native';
 import Colors from '../constants/Colors';
 import WareList from '../components/ware/wareList';
 import { MonoText } from '../components/StyledText';
-import ShopSetting from '../page/shopSetting'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     tabBarLabel: '首页',
-    header: null,
     tabBarIcon: ({focused}) => {
         if (focused) {
             return (
@@ -29,11 +29,19 @@ export default class HomeScreen extends React.Component {
     },
   };
 
+  onPressItem(param) {
+    console.log("点击了",param)
+    if(param.type == 'shopSetting'){
+      this.props.navigation.navigate('ShopSetting');
+    }else{
+      this.props.navigation.navigate('ShopSetting');
+    }
+  }
   render() {
     return (
       <View style={styles.container}>
           
-          <WareList></WareList>
+          <WareList onPressItem = {this.onPressItem.bind(this)}></WareList>
       </View>
     );
   }

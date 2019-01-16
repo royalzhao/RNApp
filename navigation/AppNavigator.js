@@ -1,19 +1,7 @@
-// import React from 'react';
-// import { createSwitchNavigator } from 'react-navigation';
-
-// import MainTabNavigator from './MainTabNavigator';
-
-// export default createSwitchNavigator({
-//   // You could add another route here for authentication.
-//   // Read more at https://reactnavigation.org/docs/en/auth-flow.html
-//   Main: MainTabNavigator,
-// });
-
-
-
 import React from 'react';
 import {createStackNavigator} from 'react-navigation';
 import {TabNav} from "./MainTabNavigator";
+
 import ShopSettingScreen from "../page/shopSetting";
 
 
@@ -22,13 +10,30 @@ const App = createStackNavigator({
         Main: {
             screen: TabNav,
             navigationOptions: ({navigation}) => ({
-                header: null
+                // header: null
+                title:"京东品客",
+                headerStyle: {
+                  backgroundColor: '#F0260E',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
             })
         }
     },
     {
         initialRouteName: 'Main',
-        headerMode: 'screen'
+        headerMode: 'screen',
+        // defaultNavigationOptions: {
+        //   headerStyle: {
+        //     backgroundColor: '#F0260E',
+        //   },
+        //   headerTintColor: '#fff',
+        //   headerTitleStyle: {
+        //     fontWeight: 'bold',
+        //   },
+        // },
     });
 
 export default App;

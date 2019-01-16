@@ -7,7 +7,6 @@ import Colors from '../constants/Colors';
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
     tabBarLabel: '购物车',
-    header: null,
     tabBarIcon: ({focused}) => {
         if (focused) {
             return (

@@ -1,12 +1,26 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View,Text,Image,StyleSheet } from 'react-native';
+import { View,Text,Image,StyleSheet,TouchableOpacity } from 'react-native';
 
 import Colors from '../../constants/Colors';
 
 export default class wareItem extends React.Component{
+
+    goShopSetting = () => {
+        console.log(1)
+        this.props.navigation.navigate('ShopSetting');
+    }
     
+    _onPress = (item) => {
+        // MyList的onPressItem
+        let param = {
+            type:'wareItem',
+            name:item.name
+        }
+        this.props.onPressItem(param);
+      }
+
     render(){
         const {
             item,
@@ -14,32 +28,33 @@ export default class wareItem extends React.Component{
             index
         } = this.props
 
-        return (
+        return (    
             <View style={styles.container}>
-                <View style={styles.wareBlock}>
-                    <Image style={styles.wareImg} source={{uri:'https://m.360buyimg.com/n1/'+item.imagePath}}></Image>
-                    <View style={styles.wareInfoBlock}>
-                        <Text numberOfLines={2} style={styles.wareTitleBlock}>
-                            <Text style={styles.wareTitleIcon}> 爆品 </Text> {item.name}
-                        </Text>
-                        <View style={styles.warePriceBlock}>
-                            <Text style={styles.warePriceIcon}>￥</Text>
-                            <Text style={styles.wareNewPrice}>{item.jdPrice}</Text>
-                            <Text style={styles.wareOldPrice}>￥{item.jdPriceOp}</Text>
-                        </View>
-                        <View style={styles.wareShareBlock}>
-                            <View style={styles.wareShareMessage}>
-                                <Text style={styles.wareShareRate}>{item.rate}佣金</Text>
-                                <Text style={styles.wareSharCommion}>￥ {item.commission}</Text>
+                <TouchableOpacity onPress={() => this._onPress(item)}>
+                    <View style={styles.wareBlock}>
+                        <Image style={styles.wareImg} source={{uri:'https://m.360buyimg.com/n1/'+item.imagePath}}></Image>
+                        <View style={styles.wareInfoBlock}>
+                            <Text numberOfLines={2} style={styles.wareTitleBlock}>
+                                <Text style={styles.wareTitleIcon}> 爆品 </Text> {item.name}
+                            </Text>
+                            <View style={styles.warePriceBlock}>
+                                <Text style={styles.warePriceIcon}>￥</Text>
+                                <Text style={styles.wareNewPrice}>{item.jdPrice}</Text>
+                                <Text style={styles.wareOldPrice}>￥{item.jdPriceOp}</Text>
                             </View>
-                            <View style={styles.wareShareButtonBolck}>
-                                <Image style={styles.wareShareButtonImg} source={require('./../../assets/images/share.png')}></Image>
-                                <Text style={styles.wareShareButtonText}>分享赚</Text>
+                            <View style={styles.wareShareBlock}>
+                                <View style={styles.wareShareMessage}>
+                                    <Text style={styles.wareShareRate}>{item.rate}佣金</Text>
+                                    <Text style={styles.wareSharCommion}>￥ {item.commission}</Text>
+                                </View>
+                                <View style={styles.wareShareButtonBolck}>
+                                    <Image style={styles.wareShareButtonImg} source={require('./../../assets/images/share.png')}></Image>
+                                    <Text style={styles.wareShareButtonText}>分享赚</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
-                </View>
-                
+                </TouchableOpacity>
             </View>
         );
     }

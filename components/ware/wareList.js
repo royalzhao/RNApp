@@ -5,7 +5,8 @@ import {
     Text,
     View,
     FlatList,
-    Button
+    Button,
+    TouchableOpacity
   } from 'react-native';
 
 // import { StackNavigator } from 'react-navigation';
@@ -17,15 +18,6 @@ import Api from "../../common/Api";
 import request from '../../common/request'
 import config from '../../common/config'
 import Introduction from '../introduction';
-
-// 路由配置
-import routerConfig from '../../navigation/routerConfig'
-// import stackNavigatorConfig from '../../navigation/stackNavigatorConfig'
-
-// const { navigate }  = this.props.navigation;
-// const simpleApp = StackNavigator(routerConfig,stackNavigatorConfig)
-
-import NavigationService from "../../navigation/NavigationService";
 
 export default class introduction extends React.Component {
     constructor(props){
@@ -88,9 +80,12 @@ export default class introduction extends React.Component {
                 item={item}
                 list={this.state.source}
                 style={styles.container}
+                onPressItem={this._onPressItem}
             ></WareItem>
         )
     }
+
+    
 
     _header = ()=>{
         return(
@@ -105,10 +100,13 @@ export default class introduction extends React.Component {
                     <Text style={styles.shopName}>赵帅的京挑店铺</Text>
                     </View>
                     {/* <Text style={styles.shopNameSetting}>设置店铺</Text> */}
-                    <Button
-                        title="设置店铺"
-                        onPress={() => NavigationService.navigate('ShopSetting')}
-                    />
+                    <TouchableOpacity
+                    onPress={this.goShopSetting} 
+                    activeOpacity={0.2} 
+                    focusedOpacity={0.5}
+                    >
+                        <Text style={styles.shopNameSetting}>设置店铺</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -179,24 +177,46 @@ export default class introduction extends React.Component {
             this._fecthDataWithLoading()
         }
     }
+    _onPressItem = (name) => {
+        // updater functions are preferred for transactional updates
+        // this.setState((state) => {
+        //   // copy the map rather than modifying state.
+        //   const selected = new Map(state.selected);
+        //   selected.set(id, !selected.get(id)); // toggle
+        //   return {selected};
+        // });
+        //渲染时候的onPressItem
+        this.props.onPressItem(name)
+    }
+
+    goShopSetting = () => {
+        let param = {
+            type:'shopSetting'
+        }
+        this.props.onPressItem(param)
+    }
 
     render() {
         return (
-            
-                <FlatList
-                    data={this.state.source}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={this._renderRows}
-                    ListEmptyComponent={this._listEmpty}
-                    ListHeaderComponent={this._header}
-                    ListFooterComponent={this._footer}
-                    refreshing={this.state.isRefreshing}
-                    onRefresh={this._fecthDataWithRefreshing}
-                    initialNumToRender={config.pageSize}
-                    onEndReached={this._fetchMoreData}
-				    onEndReachedThreshold={0.3}
-                >
-                </FlatList>
+                <View>
+                    
+                    <FlatList
+                        data={this.state.source}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={this._renderRows}
+                        ListEmptyComponent={this._listEmpty}
+                        ListHeaderComponent={this._header}
+                        ListFooterComponent={this._footer}
+                        refreshing={this.state.isRefreshing}
+                        onRefresh={this._fecthDataWithRefreshing}
+                        initialNumToRender={config.pageSize}
+                        onEndReached={this._fetchMoreData}
+                        onEndReachedThreshold={0.3}
+                    >
+                    </FlatList>
+                </View>
+                
+                
                 // {this.state.source.map((item,index) => (
                 //     <WareItem key={index} name={item.name} jdPrice={item.jdPrice} jdPriceOp={item.jdPriceOp} commission={item.commission} rate={item.rate} imagePath={item.imagePath} isHot={item.isHot}></WareItem>
                 // ))}
@@ -239,5 +259,9 @@ const styles = StyleSheet.create({
         color:Colors.tintColor,
         fontSize:14
     },
+    shopNameSetting:{
+        color:Colors.tintColor,
+        backgroundColor: '#fff',
 
+    }
 });
