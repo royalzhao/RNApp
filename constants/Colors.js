@@ -10,5 +10,5 @@ export default {
   oldPriceColor:'#999',
   listEmpty:'#f0f2f5',
   listEmptyText:'#848689',
-
+  NumBg:'#eee',
 };

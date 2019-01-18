@@ -19,7 +19,7 @@ function fetchRequest(url, method, params = ''){
                 headers: header
             }).then((response) => response.json())
                 .then((responseData) => {
-                    console.log('res:',url,responseData);  //网络请求成功返回的数据
+                    // console.log('res:',url,responseData);  //网络请求成功返回的数据
                     resolve(responseData);
                 })
                 .catch( (err) => {
