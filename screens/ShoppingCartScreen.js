@@ -5,6 +5,7 @@ import Colors from '../constants/Colors';
 import Api from "../common/Api";
 import request from '../common/request'
 import config from '../common/config'
+import { SwipeListView } from 'react-native-swipe-list-view'
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
@@ -29,7 +30,8 @@ export default class LinksScreen extends React.Component {
       isSelectedAllItem: false,
       totalNum: 0,
       totalPrice: 0.00,
-      tempData:{}
+      tempData:{},
+      tempArr:[]
     }
   }
 
@@ -68,10 +70,11 @@ export default class LinksScreen extends React.Component {
             shopObj.items = tempItems
             tempStatusArr.push(shopObj)
           })
-          this.state.status = tempStatusArr
 
-          
-          
+          this.setState({
+            status:this.state.status.concat(tempStatusArr)
+          })
+ 
         })
         .catch(err=>{
           console.log(err)
@@ -95,10 +98,11 @@ export default class LinksScreen extends React.Component {
     })
 
     this.setState({totalNum: tempTotalNum, totalPrice: tempTotalPrice})
+
   }
 
   checkedShop(index){
-    console.log(index)
+    // console.log(index)
     let tempStatus = this.state.status
     let shop = tempStatus[index]
     shop.checked = !shop.checked
@@ -115,7 +119,93 @@ export default class LinksScreen extends React.Component {
       }
     })
 
+    this.calculateCountAndPrice()
+
     this.setState({isSelectedAllItem: isSelectedAllShop, status: tempStatus})
+  }
+
+  checkItem(sectionIndex, index){
+    let tempStatus = this.state.status
+    let tempShop = tempStatus[sectionIndex]
+    let tempShopItems = tempStatus[sectionIndex].items
+    let item  = tempShopItems[index]
+    item.checked = !item.checked
+
+    let isSelectedAllShopItem = true
+    tempShopItems.map((sku)=>{
+      if(!sku.checked){
+        isSelectedAllShopItem = false
+        return
+      }
+    })
+
+    tempShop.checked = isSelectedAllShopItem
+    let isSelectedAllShop = true
+    tempStatus.map((shop)=>{
+      if(!shop.checked){
+        isSelectedAllShop = false
+        return
+      }
+    })
+
+    this.calculateCountAndPrice()
+    this.setState({
+      isSelectedAllItem:isSelectedAllShop,
+      status:tempStatus
+    })
+  }
+
+  checkAllShop(){
+    let isSelectedAllItem = !this.state.isSelectedAllItem
+    let tempStatus = this.state.status;
+    tempStatus.map((item)=>{
+      item.checked = isSelectedAllItem
+      item.items.map((skuItem)=>{
+        skuItem.checked = isSelectedAllItem
+      })
+    })
+
+    this.calculateCountAndPrice()
+    this.setState({
+      isSelectedAllItem:isSelectedAllItem,
+      status:tempStatus
+    })
+  }
+
+  add(sectionIndex,index){
+    let tempStatus = this.state.status
+    let shop = tempStatus[sectionIndex]
+    let items = shop.items
+    let item = items[index]
+    if(item.quantity >= item.maxQuantity){
+      alert('商品购买数量不能大于：'+item.maxQuantity)
+    }else{
+      item.quantity += 1
+    }
+
+    if(item.checked){
+      this.calculateCountAndPrice()
+    }
+    this.setState({
+      status:tempStatus
+    })
+  }
+
+  minus(sectionIndex,index){
+    let tempStatus = this.state.status
+    let shop = tempStatus[sectionIndex]
+    let items = shop.items
+    let item = items[index]
+    if (item.quantity <= item.minQuantity) {
+      alert('商品购买数量不能小于:'+item.minQuantity)
+    } else {
+      item.quantity -= 1
+    }
+
+    if (item.checked) {
+      this.calculateCountAndPrice()
+    }
+    this.setState({status: tempStatus})
   }
 
   renderSectionHeader = ({section}) =>{
@@ -137,29 +227,28 @@ export default class LinksScreen extends React.Component {
   }
 
   _renderRows = ({section,item,index}) => {
-    console.log(item)
-    // console.log(separators)
-    // console.log(index)
-    // let shop = this.state.status[index]
-    // console.log(section)
+
     let sectionIndex = section.index
     let statusItem = item.checked
 		return (
 			<View style={styles.cartBodyBlock}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => this.checkItem(sectionIndex, index)}>
           <Image style={styles.cartBodyButton} source={statusItem ? require('../assets/images/ic_selected.png') : require('../assets/images/ic_defult.png')}  resizeMode={'center'}></Image>
         </TouchableOpacity>
-        <Image style={styles.cartBodyImg} source={{uri:item.itemimg}}></Image>
+        <View style={styles.cartBodyImgBlock} >
+          <Image style={styles.cartBodyImg} source={{uri:item.itemimg}}></Image>
+        </View>
+        
         <View style={styles.cartBodyInfo}>
           <Text style={styles.cartBodyWareName}>{item.itemName}</Text>
           <View style={styles.cartBodyWareNumPrice}>
             <Text style={styles.cartBodyPrice}><Text style={styles.cartBodyPriceIcon}>￥</Text>{item.itemPrice}</Text>
             <View style={styles.cartBodyNumBlock}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>this.add(sectionIndex,index)}>
                 <Image style={styles.cartBodyNumImg} source={require('../assets/images/add.png')}/>
               </TouchableOpacity>
               <Text style={styles.cartBodyNum}>{item.quantity}</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>this.minus(sectionIndex,index)}>
                 <Image style={styles.cartBodyNumImg} source={require('../assets/images/reduce.png')}/>
               </TouchableOpacity>
             </View>
@@ -172,33 +261,59 @@ export default class LinksScreen extends React.Component {
 
   render() {
     console.log(2)
-    // console.log(this.state.status)
-    // if(this.state.status.length != 0){
-      let tempArr = this.state.status.map((item, index) => {
-        let tempData = {}
-        tempData.key = item.shopName
-        tempData.index = index
-        tempData.data = item.items
-        return tempData
-      })
-      // console.log(tempArr)
-    // }
+
+    let tempArr = this.state.status.map((item, index) => {
+      let tempData = {}
+      tempData.key = item.shopName
+      tempData.index = index
+      tempData.data = item.items
+      return tempData
+    })
     
     if(tempArr.length != 0){
       return (
         <View style={styles.block}>
           
-          <SectionList
+          {/* <SectionList
             renderSectionHeader={this.renderSectionHeader}
             sections={tempArr}
             renderItem={this._renderRows}
             keyExtractor={(item, index) => index.toString()}
             style={styles.SectionListBlock}
-          ></SectionList>
+          ></SectionList> */}
+
+          <SwipeListView
+            useSectionList
+            renderSectionHeader={this.renderSectionHeader}
+            sections={tempArr}
+            renderItem={this._renderRows}
+            keyExtractor={(item, index) => index.toString()}
+            style={styles.SectionListBlock}closeOnRowPress={true}  //当按下一行，关闭打开的行
+            closeOnScroll={true}    //列表滚动时关闭打开的行
+            leftOpenValue={75}      //列表项左滑translateX的值：正值
+            rightOpenValue={-75}    //列表项右滑translateX的值：负值
+            stopLeftSwipe={100}     //列表项左滑translateX最大的值：正值
+            stopRightSwipe={-100}   //列表项右滑translateX最大的值：负值
+            disableRightSwipe={true} //禁止右滑
+            ItemSeparatorComponent={() => <View style={{height: 0}}/>}
+            renderHiddenItem={(rowData) => (      //渲染隐藏的行
+                <TouchableOpacity style={styles.delete}>
+                    <Text style={{fontSize:15, color: '#fff'}}>删除</Text>
+                </TouchableOpacity>
+            )}
+            onRowOpen={(rowKey, rowMap) => {     //当滑动行的动画处于开启状态时调用
+              if(rowMap[1] !== undefined){
+                   setTimeout(() => {
+                       rowMap[rowKey].closeRow()
+                   }, 2000)
+              }
+            }}   
+          >
+          </SwipeListView>
 
           <View style={styles.cartFooterBlock}>
             <View style={styles.cartFooterInfo}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => this.checkAllShop()}>
                 <Image source={this.state.isSelectedAllItem ? require('../assets/images/ic_selected.png') : require('../assets/images/ic_defult.png')}  resizeMode={'center'}></Image>
               </TouchableOpacity>
               <Text style={styles.cartFooterSelectAll}>全选</Text>
@@ -251,6 +366,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems:'center'
   },
+  checkBox:{
+    width:14,
+    height:14,
+    marginRight:10
+  },
   cartHeadTitle:{
     fontSize:14,
     fontWeight: 'bold',
@@ -266,8 +386,7 @@ const styles = StyleSheet.create({
     paddingRight:10,
     marginLeft: 10,
     marginRight: 10,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
+    
     backgroundColor: "#fff",
     borderTopColor: '#eee',
     borderTopWidth: 1,
@@ -277,9 +396,16 @@ const styles = StyleSheet.create({
     width:14,
     height:14,
   },
-  cartBodyImg:{
+  cartBodyImgBlock:{
     width:90,
-    height:90
+    height:90,
+    backgroundColor:'#fff',
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  cartBodyImg:{
+    width:67,
+    height:67
   },
   cartBodyInfo:{
     paddingLeft:5,
@@ -325,6 +451,8 @@ const styles = StyleSheet.create({
     paddingTop:1,
     paddingBottom:1,
     backgroundColor:Colors.NumBg,
+    width:40,
+    textAlign:'center'
   },
   cartFooterBlock:{
     flexDirection:'row',
@@ -352,6 +480,16 @@ const styles = StyleSheet.create({
     fontSize:13,
     fontWeight:'bold',
     marginRight:10
+  },
+  delete:{
+    flexDirection:'row',
+    justifyContent:'flex-end',
+    backgroundColor:'#E1251B',
+    height:110,
+    alignItems:'center',
+    marginLeft:10,
+    marginRight:10,
+    paddingRight:20,
   }
 
 });
