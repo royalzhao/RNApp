@@ -208,6 +208,12 @@ export default class LinksScreen extends React.Component {
     this.setState({status: tempStatus})
   }
 
+  deleteItem(rowData){
+    console.log(rowData.index)
+    // console.log(rowData.item)
+    // console.log(rowData.section)
+  }
+
   renderSectionHeader = ({section}) =>{
     if (section.data.length <= 0) {
 			return null
@@ -297,9 +303,15 @@ export default class LinksScreen extends React.Component {
             disableRightSwipe={true} //禁止右滑
             ItemSeparatorComponent={() => <View style={{height: 0}}/>}
             renderHiddenItem={(rowData) => (      //渲染隐藏的行
-                <TouchableOpacity style={styles.delete}>
-                    <Text style={{fontSize:15, color: '#fff'}}>删除</Text>
-                </TouchableOpacity>
+                <View style={styles.delete}>
+                  <View style={styles.default}>
+
+                  </View>
+                  <TouchableOpacity style={styles.deleteButton} onPress={this.deleteItem.bind(this,rowData)}>
+                      <Text style={{fontSize:15, color: '#fff'}}>删除</Text>
+                  </TouchableOpacity>
+                </View>
+                
             )}
             onRowOpen={(rowKey, rowMap) => {     //当滑动行的动画处于开启状态时调用
               if(rowMap[1] !== undefined){
@@ -343,7 +355,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   block:{
-    flex:1
+    flex:1,
+    marginLeft:10,
+    marginRight:10,
   },
   tabBarIcon: {
     width: 23,
@@ -361,8 +375,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 11,
     flexDirection: 'row',
-    marginLeft: 10,
-    marginRight: 10,
     marginTop: 10,
     alignItems:'center'
   },
@@ -384,8 +396,6 @@ const styles = StyleSheet.create({
     paddingTop:10,
     paddingLeft:10,
     paddingRight:10,
-    marginLeft: 10,
-    marginRight: 10,
     
     backgroundColor: "#fff",
     borderTopColor: '#eee',
@@ -457,7 +467,9 @@ const styles = StyleSheet.create({
   cartFooterBlock:{
     flexDirection:'row',
     height:55,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+    marginLeft:-10,
+    marginRight:-10
   },
   cartFooterInfo:{
     flexDirection:'row',
@@ -483,13 +495,18 @@ const styles = StyleSheet.create({
   },
   delete:{
     flexDirection:'row',
-    justifyContent:'flex-end',
-    backgroundColor:'#E1251B',
+    justifyContent:'space-between',
     height:110,
-    alignItems:'center',
-    marginLeft:10,
-    marginRight:10,
-    paddingRight:20,
+  },
+  default:{
+    
+  },
+  deleteButton:{
+    width:100,
+    height:110,
+    backgroundColor:'#E1251B',
+    paddingLeft:45,
+    justifyContent:'center',
   }
 
 });

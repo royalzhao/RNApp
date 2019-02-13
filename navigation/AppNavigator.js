@@ -3,10 +3,12 @@ import {createStackNavigator} from 'react-navigation';
 import {TabNav} from "./MainTabNavigator";
 
 import ShopSettingScreen from "../page/shopSetting";
+import WaresDetailScreen from "../page/waresDetail";
 
 
 const App = createStackNavigator({
         ShopSetting: {screen: ShopSettingScreen},
+        WaresDetail: {screen: WaresDetailScreen},
         Main: {
             screen: TabNav,
             navigationOptions: ({navigation}) => ({

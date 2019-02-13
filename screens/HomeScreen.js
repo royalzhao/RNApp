@@ -34,7 +34,7 @@ export default class HomeScreen extends React.Component {
     if(param.type == 'shopSetting'){
       this.props.navigation.navigate('ShopSetting');
     }else{
-      this.props.navigation.navigate('ShopSetting');
+      this.props.navigation.navigate('WaresDetail');
     }
   }
   render() {
